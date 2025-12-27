@@ -76,7 +76,7 @@ Item {
 
         onTriggered: {
             console.debug("Exec '", plasmoid.configuration.execCmd, "' ...");
-            executable.exec(plasmoid.configuration.execCmd);
+            executable.exec("bash -c '" + plasmoid.configuration.execCmd + "'");
         }
     }
 }

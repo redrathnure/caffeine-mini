@@ -14,7 +14,7 @@
     </entry>
 
     <entry name="execCmd" type="string">
-        <default>test</default>
+        <default>if [[ "$XDG_SESSION_TYPE" == "x11" ]]; then xdotool key Pause; else wtype Pause; fi</default>
     </entry>
     <entry name="execInterval" type="Int">
         <default>1</default>
