@@ -1,0 +1,177 @@
+#!/bin/bash
+
+
+ALL_ICONS=(
+    "caffeine_active_10_70.svg"
+    "caffeine_active_10_100.svg"
+    "caffeine_active_40_70.svg"
+    "caffeine_active_40_100.svg"
+    "caffeine_active_80_70.svg"
+    "caffeine_active_80_100.svg"
+    "caffeine_inactive_10_70.svg"
+    "caffeine_inactive_10_100.svg"
+    "caffeine_inactive_40_70.svg"
+    "caffeine_inactive_40_100.svg"
+    "caffeine_inactive_80_70.svg"
+    "caffeine_inactive_80_100.svg"
+)
+
+
+DST_ICONS_DIR=~/.local/share/icons
+OS_RELEASE_FILE=/etc/os-release
+
+check_mode() {
+    if [[ "$MODE" != "dark" && "$MODE" != "bright" ]]; then
+        MODE="dark"
+    fi
+}
+
+check_session_type() {
+    printf "Session type: "
+    if [[ "$XDG_SESSION_TYPE" == "x11" ]]; then
+        printf "x11\n"
+    elif [[ "$XDG_SESSION_TYPE" == "wayland" ]]; then
+        printf "wayland\n"
+    else
+        printf "\nUnable to detect session type. Exit..."
+        exit -1
+    fi
+}
+
+
+install_deps() {
+    deps=""
+    if [[ "$XDG_SESSION_TYPE" == "x11" ]]; then
+        deps="xdotool"
+    else
+        deps="wtype"
+    fi
+    printf "Installing dependencies: %s \n" $deps
+
+    installCmd="sudo "
+
+    
+    if grep -q "debian" "$OS_RELEASE_FILE"; then
+        installCmd+=" apt install "
+    elif grep -q "arch linux" "$OS_RELEASE_FILE"; then
+        installCmd+=" pacman -S "
+    else
+        printf "Unable to detect package manager type. Exit...\n"
+        exit -1
+    fi
+
+    $installCmd $deps
+}
+
+add_icons() {
+    printf "Installing icons: "
+
+    for icon in ${ALL_ICONS[@]}; do
+        if [[ ! -e "$DST_ICONS_DIR/$icon" ]]; then
+            cp "assets/$icon" "$DST_ICONS_DIR/"
+        fi
+    done
+
+    printf "done\n"
+}
+
+remove_icons() {
+    printf "Removing icons: "
+
+    for icon in ${ALL_ICONS[@]}; do
+        if [[ -e "$DST_ICONS_DIR/$icon" ]]; then
+            rm "$DST_ICONS_DIR/$icon"
+        fi
+    done
+
+    printf "done\n"
+}
+
+add_plasmoid() {
+    printf "Installing plasmoid..."
+
+    #TODO install plasmoid
+    # TODO: get ready for plasma 6.x
+
+    printf "done\n"
+}
+
+remove_plasmoid() {
+    printf "Removing plasmoid: "
+
+    #TODO: drip files
+
+    printf "done\n"
+}
+
+
+install() {
+    check_mode
+
+    printf "Installing plasmoid (%s theme)...\n" $MODE
+
+    check_session_type
+    install_deps
+    add_icons
+    add_plasmoid
+}
+
+
+
+uninstall() {
+    printf "Removing plasmoid...\n"
+
+    remove_icons
+    remove_plasmoid
+}
+
+
+display_help() {
+    printf "Install plasmoid for blocking sleep mode. Similar to caffeine but with minimal dependencies...\n\n"
+    printf "Usage: ./setup ACTION [OPTIONS] \n"
+    printf "actions:\n"
+    printf "  install - same as install_dark (use --mode to specify theme)\n"
+    printf "  uninstall - Uninstall the plasmoid\n"
+    printf "Options:\n"
+    printf "  --mode MODE    Specify \"bright\" or \"dark\" theme (affects icons)\n"
+    printf "  -h, --help     Show this help and exit\n\n"
+}
+
+
+
+MODE=""
+ACTION=""
+
+for i in "$@"
+do
+    case $i in
+        -m=*|--mode=*)
+            MODE="${i#*=}"
+            ;;
+        -h|--help)
+            display_help
+            exit 0
+            ;;
+        *)
+            ACTION="$1"
+            ;;
+    esac
+done
+
+
+case $ACTION in
+    install)
+        install
+        ;;
+
+    #TODO clone and install
+
+    uninstall)
+        uninstall
+        ;;
+
+    *)
+        display_help
+        ;;
+esac
+
