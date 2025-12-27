@@ -2,16 +2,22 @@
 
 
 ALL_ICONS=(
+    "caffeine_active_10_40.svg"
     "caffeine_active_10_70.svg"
     "caffeine_active_10_100.svg"
     "caffeine_active_40_70.svg"
+    "caffeine_active_40_40.svg"
     "caffeine_active_40_100.svg"
     "caffeine_active_80_70.svg"
+    "caffeine_active_80_40.svg"
     "caffeine_active_80_100.svg"
+    "caffeine_inactive_10_40.svg"
     "caffeine_inactive_10_70.svg"
     "caffeine_inactive_10_100.svg"
+    "caffeine_inactive_40_40.svg"
     "caffeine_inactive_40_70.svg"
     "caffeine_inactive_40_100.svg"
+    "caffeine_inactive_80_40.svg"
     "caffeine_inactive_80_70.svg"
     "caffeine_inactive_80_100.svg"
 )
