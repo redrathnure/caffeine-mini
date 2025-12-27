@@ -20,11 +20,23 @@ ALL_ICONS=(
     "caffeine_inactive_80_40.svg"
     "caffeine_inactive_80_70.svg"
     "caffeine_inactive_80_100.svg"
+
+    "caffeine_active_default.svg"
+    "caffeine_inactive_default.svg"
 )
 
+ICON_ACTIVE_DST=caffeine_active_default.svg
+ICON_ACTIVE_DARK=caffeine_active_80_100.svg
+ICON_ACTIVE_BRIGHT=caffeine_active_10_100.svg
+
+ICON_INACTIVE_DST=caffeine_inactive_default.svg
+ICON_INACTIVE_DARK=caffeine_inactive_80_40.svg
+ICON_INACTIVE_BRIGHT=caffeine_inactive_10_40.svg
 
 DST_ICONS_DIR=~/.local/share/icons
 OS_RELEASE_FILE=/etc/os-release
+
+PKG_ID=com.github.redrathnure.caffeine-mini
 
 check_mode() {
     if [[ "$MODE" != "dark" && "$MODE" != "bright" ]]; then
@@ -41,6 +53,14 @@ check_session_type() {
     else
         printf "\nUnable to detect session type. Exit..."
         exit -1
+    fi
+}
+
+init_pkg_tool() {
+    PKG_TOOL=kpackagetool5
+
+    if command -v kpackagetool6 >/dev/null 2>&1; then
+        PKG_TOOL=kpackagetool6
     fi
 }
 
@@ -73,10 +93,26 @@ add_icons() {
     printf "Installing icons: "
 
     for icon in ${ALL_ICONS[@]}; do
-        if [[ ! -e "$DST_ICONS_DIR/$icon" ]]; then
+        if [[ -e "assets/$icon" && ! -e "$DST_ICONS_DIR/$icon" ]]; then
             cp "assets/$icon" "$DST_ICONS_DIR/"
         fi
     done
+
+
+    ICON_ACTIVE_SRC=$ICON_ACTIVE_DARK
+    ICON_INACTIVE_SRC=$ICON_INACTIVE_DARK
+
+    if [[ "$MODE" != "dark" && "$MODE" != "bright" ]]; then
+        ICON_ACTIVE_SRC=$ICON_ACTIVE_BRIGHT
+        ICON_INACTIVE_SRC=$ICON_INACTIVE_BRIGHT
+    fi
+
+    if [[ ! -e "$DST_ICONS_DIR/$ICON_ACTIVE_DST" ]]; then
+        cp "assets/$ICON_ACTIVE_SRC" "$DST_ICONS_DIR/$ICON_ACTIVE_DST"
+    fi
+    if [[ ! -e "$DST_ICONS_DIR/$ICON_INACTIVE_DST" ]]; then
+        cp "assets/$ICON_INACTIVE_SRC" "$DST_ICONS_DIR/$ICON_INACTIVE_DST"
+    fi
 
     printf "done\n"
 }
@@ -94,10 +130,15 @@ remove_icons() {
 }
 
 add_plasmoid() {
-    printf "Installing plasmoid..."
+    printf "Installing plasmoid '$PKG_ID'... \n"
 
-    #TODO install plasmoid
-    # TODO: get ready for plasma 6.x
+    init_pkg_tool
+
+    if $PKG_TOOL --show $PKG_ID >/dev/null 2>&1; then
+        $PKG_TOOL --upgrade $PKG_ID
+    else
+        $PKG_TOOL --install $PKG_ID
+    fi
 
     printf "done\n"
 }
@@ -105,7 +146,9 @@ add_plasmoid() {
 remove_plasmoid() {
     printf "Removing plasmoid: "
 
-    #TODO: drip files
+    init_pkg_tool
+
+    $PKG_TOOL --remove $PKG_ID
 
     printf "done\n"
 }

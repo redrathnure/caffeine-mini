@@ -1,0 +1,28 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Maxim Medvedev",
+                "Email": "redrathnure@gmail.com"
+            }
+        ],
+        "BugReportUrl": "https://github.com/redrathnure/caffeine-mini/issues",
+        "Category": "Utilities",
+        "Description": "Do not sleep",
+        "EnabledByDefault": true,
+        "FormFactors": [
+            "desktop"
+        ],
+        "Icon": "caffeine_active_80_100.svg",
+        "Id": "com.github.redrathnure.caffeine-mini",
+        "License": "GPL-2.0+",
+        "Name": "Caffeine Mini",
+        "ServiceTypes": [
+            "Plasma/Applet"
+        ],
+        "Version": "1.0",
+        "Website": "https://github.com/redrathnure/caffeine-mini"
+    },
+    "X-Plasma-API": "declarativeappletscript",
+    "X-Plasma-MainScript": "ui/CaffeineMini.qml"
+}
