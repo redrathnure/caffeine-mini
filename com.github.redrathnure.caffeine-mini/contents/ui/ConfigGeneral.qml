@@ -40,6 +40,9 @@ Item {
         }
         QQC2.SpinBox {
             id: configExecInterval
+            stepSize: 15
+            from: 1
+            to: 60 * 60
             Kirigami.FormData.label: i18n("Execution interval (seconds):")
         }
     }

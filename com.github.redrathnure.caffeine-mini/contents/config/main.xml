@@ -17,7 +17,7 @@
         <default>if [[ "$XDG_SESSION_TYPE" == "x11" ]]; then xdotool key Pause; else wtype Pause; fi</default>
     </entry>
     <entry name="execInterval" type="Int">
-        <default>1</default>
+        <default>60</default>
     </entry>
   </group>
 </kcfg>

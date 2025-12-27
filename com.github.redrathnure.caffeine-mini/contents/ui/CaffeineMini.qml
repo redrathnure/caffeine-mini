@@ -33,6 +33,10 @@ Item {
         connectedSources: []
         onNewData: (source, data) => {
             disconnectSource(source);  // Clean up after execution
+            if (data.stderr)
+                console.warn("Error:", data.stderr);
+            else if (data.stdout)
+                console.debug("Output:", data.stdout);
         }
 
         function exec(cmd) {
