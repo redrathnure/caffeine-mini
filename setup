@@ -134,7 +134,7 @@ add_plasmoid() {
 
     init_pkg_tool
 
-    if $PKG_TOOL --show $PKG_ID >/dev/null 2>&1; then
+    if [[ -d ~/.local/share/plasma/plasmoids/$PKG_ID ]]; then
         $PKG_TOOL --upgrade $PKG_ID
     else
         $PKG_TOOL --install $PKG_ID
